@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "649983876089",
+    "project_id": "mobilprogramlama-46eda",
+    "storage_bucket": "mobilprogramlama-46eda.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:649983876089:android:5f4ae277cb0b164f2ffb28",
+        "android_client_info": {
+          "package_name": "com.company.mobilprogramlama"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzm0aBOJRx69nYJJkR8LHIFWs7TaE2kIU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
