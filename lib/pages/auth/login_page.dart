@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mobilprogramlama/pages/auth/register_page.dart';
 import 'package:mobilprogramlama/pages/home_page.dart';
+import 'package:mobilprogramlama/pages/admin/admin_dashboard.dart';
+import 'package:mobilprogramlama/services/auth_service.dart';
 import 'package:mobilprogramlama/widgets/custom_button.dart';
 import 'package:mobilprogramlama/widgets/custom_textfield.dart';
 
@@ -13,6 +15,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final AuthService _authService = AuthService();
   bool isLoading = false;
   String errorMessage = "";
 
@@ -23,16 +26,27 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      final userModel = await _authService.loginUser(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
 
-      // Giriş başarılı -> Ana sayfaya yönlendir
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
+      if (userModel != null) {
+        // Rol kontrolü yapıp ilgili sayfaya yönlendir
+        if (userModel.role == 'admin') {
+          // Admin kullanıcısı - Admin paneline yönlendir
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => AdminDashboard()),
+          );
+        } else {
+          // Normal kullanıcı - Ana sayfaya yönlendir
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+          );
+        }
+      }
     } on FirebaseAuthException catch (e) {
       setState(() {
         errorMessage = e.message ?? "Giriş başarısız!";

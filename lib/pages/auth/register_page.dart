@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mobilprogramlama/pages/home_page.dart';
+import 'package:mobilprogramlama/services/auth_service.dart';
 import 'package:mobilprogramlama/widgets/custom_button.dart';
 import 'package:mobilprogramlama/widgets/custom_textfield.dart';
 
@@ -10,37 +11,53 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
+  final AuthService _authService = AuthService();
   bool isLoading = false;
   String errorMessage = "";
 
   Future<void> registerUser() async {
+    // Tüm alanların doldurulduğunu kontrol et
+    if (nameController.text.isEmpty ||
+        emailController.text.isEmpty ||
+        passwordController.text.isEmpty ||
+        confirmPasswordController.text.isEmpty) {
+      setState(() {
+        errorMessage = "Tüm alanları doldurun!";
+      });
+      return;
+    }
+
+    // Şifrelerin eşleştiğini kontrol et
+    if (passwordController.text != confirmPasswordController.text) {
+      setState(() {
+        errorMessage = "Şifreler eşleşmiyor!";
+      });
+      return;
+    }
+
     setState(() {
       isLoading = true;
       errorMessage = "";
     });
 
-    if (passwordController.text != confirmPasswordController.text) {
-      setState(() {
-        errorMessage = "Şifreler eşleşmiyor!";
-        isLoading = false;
-      });
-      return;
-    }
-
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final userModel = await _authService.registerUser(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
+        role: 'user', // Varsayılan olarak normal kullanıcı rolü
       );
 
-      // Başarılı kayıt -> Ana sayfaya yönlendir
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
+      if (userModel != null) {
+        // Kayıt başarılı -> Ana sayfaya yönlendir
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      }
     } on FirebaseAuthException catch (e) {
       setState(() {
         errorMessage = e.message ?? "Kayıt başarısız!";
@@ -55,25 +72,33 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Kayıt Ol"),
+      ),
       body: Center(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                "Kayıt Ol",
+                "Hesap Oluştur",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.blueAccent),
               ),
               SizedBox(height: 8),
               Text(
-                "Lütfen bilgilerinizi girin",
+                "Yeni bir hesap oluşturmak için bilgilerinizi girin",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
               SizedBox(height: 32),
+              CustomTextField(
+                hintText: "Ad Soyad",
+                controller: nameController,
+              ),
+              SizedBox(height: 12),
               CustomTextField(
                 hintText: "E-posta",
                 controller: emailController,
@@ -87,7 +112,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               SizedBox(height: 12),
               CustomTextField(
-                hintText: "Şifreyi Onayla",
+                hintText: "Şifreyi Tekrar Girin",
                 controller: confirmPasswordController,
                 isPassword: true,
               ),
@@ -104,17 +129,6 @@ class _RegisterPageState extends State<RegisterPage> {
                   : CustomButton(
                 text: "Kayıt Ol",
                 onPressed: registerUser,
-              ),
-              SizedBox(height: 16),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  "Zaten bir hesabınız var mı? Giriş Yap",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.blueAccent),
-                ),
               ),
             ],
           ),
