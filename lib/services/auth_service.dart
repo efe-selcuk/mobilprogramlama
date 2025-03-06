@@ -103,4 +103,39 @@ class AuthService {
   Future<void> logout() async {
     await _auth.signOut();
   }
+
+  // Admin yetki doğrulama metodu
+  Future<bool> isUserAdmin() async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) return false;
+
+    try {
+      final role = await getCurrentUserRole();
+      return role == 'admin';
+    } catch (e) {
+      print('Yetki kontrolü hatası: $e');
+      return false;
+    }
+  }
+
+  // Yetki kontrolü yardımcı metodu
+  Future<bool> checkPermission(String requiredRole) async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) return false;
+
+    try {
+      final role = await getCurrentUserRole();
+      
+      // Admin her şeyi yapabilir
+      if (role == 'admin') return true;
+      
+      // Normal kullanıcılar sadece 'user' rolü gerektiren işlemleri yapabilir
+      if (requiredRole == 'user' && role == 'user') return true;
+      
+      return false;
+    } catch (e) {
+      print('Yetki kontrolü hatası: $e');
+      return false;
+    }
+  }
 } 
