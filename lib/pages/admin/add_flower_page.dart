@@ -3,7 +3,7 @@ import 'package:mobilprogramlama/models/flower_model.dart';
 import 'package:mobilprogramlama/services/flower_service.dart';
 
 class AddFlowerPage extends StatefulWidget {
-  const AddFlowerPage({Key? key}) : super(key: key);
+  const AddFlowerPage({super.key});
 
   @override
   State<AddFlowerPage> createState() => _AddFlowerPageState();

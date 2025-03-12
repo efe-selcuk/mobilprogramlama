@@ -146,7 +146,6 @@ class _AdminDashboardState extends State<AdminDashboard> with SingleTickerProvid
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
         backgroundColor: Colors.green,
         onPressed: () {
           Navigator.push(
@@ -154,6 +153,7 @@ class _AdminDashboardState extends State<AdminDashboard> with SingleTickerProvid
             MaterialPageRoute(builder: (context) => const AddFlowerPage()),
           );
         },
+        child: const Icon(Icons.add),
       ),
     );
   }

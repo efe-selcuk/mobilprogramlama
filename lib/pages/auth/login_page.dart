@@ -8,6 +8,8 @@ import 'package:mobilprogramlama/widgets/custom_button.dart';
 import 'package:mobilprogramlama/widgets/custom_textfield.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }

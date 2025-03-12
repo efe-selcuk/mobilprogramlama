@@ -6,7 +6,7 @@ import 'package:mobilprogramlama/services/flower_service.dart';
 class FlowerDetailPage extends StatefulWidget {
   final Flower flower;
   
-  const FlowerDetailPage({Key? key, required this.flower}) : super(key: key);
+  const FlowerDetailPage({super.key, required this.flower});
 
   @override
   State<FlowerDetailPage> createState() => _FlowerDetailPageState();
@@ -335,42 +335,6 @@ class _FlowerDetailPageState extends State<FlowerDetailPage> {
                             
                             const SizedBox(height: 32),
                                                         
-                            // Add to cart button
-                            SizedBox(
-                              width: double.infinity,
-                              height: 54,
-                              child: ElevatedButton(
-                                onPressed: _flower.isAvailable 
-                                    ? () {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(content: Text('Sepete ekleme özelliği yakında eklenecek')),
-                                        );
-                                      }
-                                    : null,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.green[700],
-                                  foregroundColor: Colors.white,
-                                  disabledBackgroundColor: Colors.grey[300],
-                                  disabledForegroundColor: Colors.grey[600],
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Icon(Icons.shopping_cart),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      _flower.isAvailable ? 'Sepete Ekle' : 'Ürün Tükendi',
-                                      style: const TextStyle(fontSize: 18),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            
                             // Related products could be added here
                           ],
                         ),

@@ -6,6 +6,8 @@ import 'package:mobilprogramlama/widgets/custom_button.dart';
 import 'package:mobilprogramlama/widgets/custom_textfield.dart';
 
 class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
+
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }

@@ -67,4 +67,34 @@ class FlowerService {
     }
     await _flowersCollection.doc(flowerId).delete();
   }
+  
+  // Fiyat aralığını bulmak için kullanılacak metod
+  Future<Map<String, double>> getPriceRange() async {
+    try {
+      var snapshot = await _flowersCollection.get();
+      List<Flower> flowers = snapshot.docs.map((doc) {
+        return Flower.fromMap(doc.data() as Map<String, dynamic>, doc.id);
+      }).toList();
+      
+      if (flowers.isEmpty) {
+        return {'min': 0.0, 'max': 1000.0}; // Varsayılan değerler
+      }
+      
+      double minPrice = flowers.first.price;
+      double maxPrice = flowers.first.price;
+      
+      for (var flower in flowers) {
+        if (flower.price < minPrice) minPrice = flower.price;
+        if (flower.price > maxPrice) maxPrice = flower.price;
+      }
+      
+      // Maksimum fiyatı biraz yuvarla ve marj ekle
+      maxPrice = (maxPrice * 1.1).ceilToDouble();
+      
+      return {'min': minPrice, 'max': maxPrice};
+    } catch (e) {
+      print('Fiyat aralığı getirilirken hata oluştu: $e');
+      return {'min': 0.0, 'max': 1000.0}; // Hata durumunda varsayılan değerler
+    }
+  }
 } 

@@ -8,12 +8,12 @@ class FlowerCard extends StatelessWidget {
   final VoidCallback? onDelete;
 
   const FlowerCard({
-    Key? key,
+    super.key,
     required this.flower,
     required this.onTap,
     this.onEdit,
     this.onDelete,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +76,7 @@ class FlowerCard extends StatelessWidget {
                     ),
                     Positioned(
                       top: 10,
-                      right: 10,
+                      left: 10,
                       child: flower.isAvailable 
                         ? Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -136,32 +136,21 @@ class FlowerCard extends StatelessWidget {
                       Text(
                         flower.description,
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                        maxLines: 2,
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 8),
                       // Price and category row
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            '${flower.price.toStringAsFixed(2)} ₺',
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.green,
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Colors.blue[50],
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Colors.blue.shade200),
-                            ),
+                          Expanded(
                             child: Text(
-                              flower.category,
-                              style: TextStyle(fontSize: 12, color: Colors.blue[800], fontWeight: FontWeight.w500),
+                              '${flower.price.toStringAsFixed(2)} ₺',
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green,
+                              ),
                             ),
                           ),
                         ],
